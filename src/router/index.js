@@ -78,6 +78,56 @@ export const constantRoutes = [
         meta: { title: '个人中心', icon: 'user' }
       }
     ]
+  },
+  {
+    path:'/organization',
+    component:Layout,
+    alwaysShow: true ,
+    name:'organization',
+    hidden:false,
+    redirect:'noredirect',
+    meta:{
+      title:"组织管理",icon:"system"
+    },
+    children:[
+      {
+        path:'department',
+        name:"department",
+        component: (resolve) => require(['@/views/organization/department/index'], resolve),
+        meta:{
+          title:"部门管理",icon:"form"
+        },
+      },
+      {
+        path:'post',
+        name:"post",
+        component: (resolve) => require(['@/views/organization/post/index'], resolve),
+        meta:{
+          title:"岗位管理",icon:"form"
+        },
+      },
+    ]
+  },
+  {
+    path:'/userManagement',
+    component:Layout,
+    alwaysShow: true ,
+    name:'userManagement',
+    hidden:false,
+    redirect:'noredirect',
+    meta:{
+      title:"用户管理",icon:"system"
+    },
+    children:[
+      {
+        path:'userList',
+        name:"userList",
+        component: (resolve) => require(['@/views/userManagement/userList/index'], resolve),
+        meta:{
+          title:"用户列表",icon:"form"
+        },
+      }
+    ]
   }
 ]
 
