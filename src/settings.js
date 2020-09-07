@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'Engine',
+  title: '组织架构管理系统',
 
   /**
    * 是否系统布局配置

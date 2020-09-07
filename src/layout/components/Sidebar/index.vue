@@ -13,7 +13,7 @@
                 mode="vertical"
             >
                 <sidebar-item
-                    v-for="(route, index) in permission_routes"
+                    v-for="(route, index) in constantRoutes"
                     :key="route.path  + index"
                     :item="route"
                     :base-path="route.path"
@@ -27,9 +27,64 @@
 import { mapGetters, mapState } from "vuex";
 import Logo from "./Logo";
 import SidebarItem from "./SidebarItem";
+import Layout from '@/layout'
 import variables from "@/assets/styles/variables.scss";
-
+//import {constantRoutes} from "@/router/index"
 export default {
+    data(){
+        return{
+            constantRoutes:[{
+            path:'/organization',
+            component:Layout,
+        
+            name:'organization',
+            hidden:false,
+            redirect:'noredirect',
+            meta:{
+            title:"组织管理",icon:"system"
+            },
+            children:[
+            {
+                path:'department',
+                name:"department",
+                component: (resolve) => require(['@/views/organization/department/index'], resolve),
+                meta:{
+                title:"部门管理",icon:"form"
+                },
+            },
+            {
+                path:'post',
+                name:"post",
+                component: (resolve) => require(['@/views/organization/post/index'], resolve),
+                meta:{
+                title:"岗位管理",icon:"form"
+                },
+            },
+            ]
+        },
+        {
+            path:'/userManagement',
+            component:Layout,
+        
+            name:'userManagement',
+            hidden:false,
+            redirect:'noredirect',
+            meta:{
+            title:"用户管理",icon:"system"
+            },
+            children:[
+            {
+                path:'userList',
+                name:"userList",
+                component: (resolve) => require(['@/views/userManagement/userList/index'], resolve),
+                meta:{
+                title:"用户列表",icon:"form"
+                },
+            }
+            ]
+        }]
+        }
+    },
     components: { SidebarItem, Logo },
     computed: {
         ...mapState(["settings"]),

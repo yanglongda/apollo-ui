@@ -1,6 +1,7 @@
 import Vue from 'vue'
 
 import Cookies from 'js-cookie'
+import axios from 'axios'
 
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 
@@ -29,7 +30,7 @@ Vue.prototype.addDateRange = addDateRange
 Vue.prototype.selectDictLabel = selectDictLabel
 Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
-
+Vue.prototype.axios=axios
 Vue.prototype.msgSuccess = function (msg) {
   this.$message({ showClose: true, message: msg, type: "success" });
 }
@@ -61,7 +62,9 @@ Vue.use(Element, {
 })
 
 Vue.config.productionTip = false
-
+// axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
+// axios.defaults.baseURL=process.env.VUE_APP_BASE_API
+// axios.defaults.timeout=10000
 new Vue({
   el: '#app',
   router,

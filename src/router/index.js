@@ -37,11 +37,11 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/login',
-    component: (resolve) => require(['@/views/login'], resolve),
-    hidden: true
-  },
+  // {
+  //   path: '/login',
+  //   component: (resolve) => require(['@/views/login'], resolve),
+  //   hidden: true
+  // },
   {
     path: '/404',
     component: (resolve) => require(['@/views/error/404'], resolve),
@@ -55,6 +55,7 @@ export const constantRoutes = [
   {
     path: '',
     component: Layout,
+    alwaysShow: true,
     redirect: 'index',
     children: [
       {
@@ -82,7 +83,7 @@ export const constantRoutes = [
   {
     path:'/organization',
     component:Layout,
-    alwaysShow: true ,
+   
     name:'organization',
     hidden:false,
     redirect:'noredirect',
@@ -111,7 +112,7 @@ export const constantRoutes = [
   {
     path:'/userManagement',
     component:Layout,
-    alwaysShow: true ,
+   
     name:'userManagement',
     hidden:false,
     redirect:'noredirect',
