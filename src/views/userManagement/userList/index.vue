@@ -2,7 +2,7 @@
     <div class="career">
         <el-form ref="form" class="form" :model="form">
             <el-form-item label="所属部门" style="width:290px">
-            <el-select v-model="form.year" style="width:204px;" filterable placeholder="请选择">
+            <el-select v-model="form.deptId" style="width:204px;" filterable placeholder="请选择">
                 <el-option label="全部" value=""></el-option>
                 <el-option label="一级部门" value="1"></el-option>
                 <el-option label="二级部门" value="2"></el-option>
@@ -10,7 +10,7 @@
             </el-select>
             </el-form-item>
             <el-form-item label="人员岗位" style="width:290px">
-            <el-select v-model="form.year" style="width:204px;" filterable placeholder="请选择">
+            <el-select v-model="form.postId" style="width:204px;" filterable placeholder="请选择">
                 <el-option label="全部" value=""></el-option>
                 <el-option label="一级部门" value="1"></el-option>
                 <el-option label="二级部门" value="2"></el-option>
@@ -18,7 +18,7 @@
             </el-select>
             </el-form-item>
             <el-form-item label="搜索" style="width:290px;">
-            <el-input v-model="form.seachInfo"  style="width:240px;" placeholder="按部门名称搜索"></el-input>
+            <el-input v-model="form.keyword"  style="width:240px;" placeholder="按部门名称搜索"></el-input>
             </el-form-item>
             <el-form-item>
             <el-button type="primary" @click="handleQueryForm">搜索</el-button>
@@ -42,7 +42,7 @@
         <el-table-column label="人员岗位" align="center" prop="className" />
         <el-table-column label="职务层次" align="center" prop="name" />
         <el-table-column label="人员排序码" align="center" prop="name" />
-        <el-table-column label="操作" align="center" >
+        <el-table-column label="操作" align="center">
             <template slot-scope="scope">
                 <el-button size="mini" type="text" style="font-size:12px;color: #409eff;" @click="addDep(scope.row)">修改</el-button>
                 <el-button size="mini" type="text" style="font-size:12px;color: #409eff;" @click="deleteDep(scope.row)">删除</el-button>
@@ -54,7 +54,7 @@
           v-show="total>0"
           :total="total"
           :page.sync="form.page"
-          :limit.sync="form.pageSize"
+          :limit.sync="form.size"
           @pagination="handleQuery"
         />
       </div>
@@ -169,19 +169,14 @@
 </template>
 
 <script>
+import {getPage} from '@/api/userManagement/userList'
 
 export default {
     name:'department',
     data(){
         return{
             data:[
-                {
-                    numb:'部门1',
-                    schoolName:'单位1',
-                    year:'',
-                    className:'',
-                    name:''
-                }
+                
             ],
             title:'新增',
             yearList:[],
@@ -193,11 +188,11 @@ export default {
             isdisabled:false,
             isshow:false,
             form:{
-                year:'',
-                class:'',
-                seachInfo:'',
+                deptId:'',
+                keyword:'',
+                postId:'',
                 page:1,
-                pageSize:10,    
+                size:10,    
             },
             ruleForm:{
                 depName:'',
@@ -237,7 +232,16 @@ export default {
 
         },
         handleQuery(){
-            
+          this.loading=true
+            getPage(this.form).then(res=>{
+                if(res.data.code===200){
+                    this.data=res.data.data.records
+                    this.total=res.data.data.total
+                    this.loading=false
+                }else{
+                  this.msgError(message)
+                }
+            })
         },
         handleSelect(){
           

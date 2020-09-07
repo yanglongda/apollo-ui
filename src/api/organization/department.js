@@ -1,5 +1,4 @@
  import request from '@/utils/request'
-import { Form } from 'element-ui'
 
 // 单位列表
 export function getList(){
@@ -47,6 +46,16 @@ export function getParent(unitId){
     method:'get',
   })
 }
+export function getParent2(deptName,levelId){
+  return request({
+    url:"/api/dept/level",
+    method:'get',
+    params:{
+      deptName,levelId
+    }
+  })
+}
+
 //详情
 export function getDept(id){
   return request({

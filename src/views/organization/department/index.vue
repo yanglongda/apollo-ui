@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import {getList,handleQuery,levels,addDept,getParent,getDept,addDept2,deleteDept} from "@/api/organization/department"
+import {getList,handleQuery,levels,addDept,getParent,getDept,addDept2,deleteDept,getParent2} from "@/api/organization/department"
 export default {
     name:'department',
     data(){
@@ -228,7 +228,15 @@ export default {
                 this.isdisabled=true
                 this.isshow=true
             }else{
-              
+              let deptName=this.ruleForm.deptName
+              let levalId=this.ruleForm.levelId
+              getParent2(deptName,levalId).then(res=>{
+                if(res.data.code===200){
+                  this.deptList=res.data.data
+                }else{
+                  this.msgError(res.message)
+                }
+              })
                 this.isdisabled=false
                 this.isshow=false
             }
@@ -264,6 +272,8 @@ export default {
         },
         addDep(row){
             this.dialogFormVisible=true
+            this.isdisabled=false
+            this.isshow=false
             if(row.id){
                 this.ruleForm={deptName:'',
                 level:'',
@@ -294,6 +304,11 @@ export default {
                     this.ruleForm.parentName=res.data.data.parentName
                     }
                     this.ruleForm.sort=res.data.data.sort
+                    if(this.ruleForm.levelId=='1'){
+                        this.ruleForm.parent=''
+                        this.isdisabled=true
+                        this.isshow=true
+                    }
                     console.log(this.ruleForm)
                     // this.change1()
                     // this.change2()

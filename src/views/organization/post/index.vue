@@ -1,27 +1,27 @@
 <template>
     <div class="career">
-        <el-button type="primary" style="margin:20px;" @click="addDep">新增</el-button>
+        <el-button type="primary" style="margin:20px;" @click="addPost">新增</el-button>
         <el-table
         v-loading="loading"
         class="table-num"
         :data="data"
         >
         <tamplate slot='empty'>
-            <p style="font-size:12px;margin:0;">暂无数据，<el-botton size="mini" type="text" @click="addDep" style="cursor:pointer;color: #409eff;">点击新增</el-botton></p>
+            <p style="font-size:12px;margin:0;">暂无数据，<el-botton size="mini" type="text" @click="addPost" style="cursor:pointer;color: #409eff;">点击新增</el-botton></p>
         </tamplate>    
-        <el-table-column label="岗位名称" align="center" prop="numb"/>
-        <el-table-column label="岗位职责" align="center" prop="schoolName" />
+        <el-table-column label="岗位名称" align="center" prop="name"/>
+        <el-table-column label="岗位职责" align="center" prop="duty" />
         <el-table-column label="岗位状态" align="center" prop="status" >
           <tamplate slot-scope="scope">
-              <span v-if="scope.row.status=='启用'" style="color:#11CAB0">{{scope.row.status}}</span>
-              <span v-else style="color:#FF0000">{{scope.row.status}}</span>
+              <span v-if="scope.row.status=='0'" style="color:#11CAB0">启用</span>
+              <span v-else style="color:#FF0000">未启用</span>
           </tamplate>  
         </el-table-column>
-        <el-table-column label="岗位排序码" align="center" prop="name" />
+        <el-table-column label="岗位排序码" align="center" prop="sort" />
         <el-table-column label="操作" align="center" >
             <template slot-scope="scope">
-                <el-button size="mini" type="text" style="font-size:12px;color: #409eff;" @click="addDep(scope.row)">修改</el-button>
-                <el-button size="mini" type="text" style="font-size:12px;color: #409eff;" @click="deleteDep(scope.row)">删除</el-button>
+                <el-button size="mini" type="text" style="font-size:12px;color: #409eff;" @click="addPost(scope.row)">修改</el-button>
+                <el-button size="mini" type="text" style="font-size:12px;color: #409eff;" @click="deletePost(scope.row)">删除</el-button>
             </template>
         </el-table-column>
       </el-table>
@@ -30,7 +30,7 @@
           v-show="total>0"
           :total="total"
           :page.sync="form.page"
-          :limit.sync="form.pageSize"
+          :limit.sync="form.size"
           @pagination="handleQuery"
         />
       </div>
@@ -41,20 +41,19 @@
         append-to-body
       >
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
-          <el-form-item label="岗位名称" style="" prop="depName">
-            <el-input v-model="ruleForm.depName" style="width:250px;" placeholder="输入部门名称"></el-input>
+          <el-form-item label="岗位名称" style="" prop="name">
+            <el-input v-model="ruleForm.name" style="width:250px;" placeholder="输入岗位名称"></el-input>
           </el-form-item>
-          <el-form-item label="岗位职责" style="" prop="company">
-            <el-input v-model="ruleForm.company" type="textarea" style="width:250px;" placeholder="请输入简要的岗位职责，如管理哪些信息及事务。"></el-input>
+          <el-form-item label="岗位职责" style="" prop="duty">
+            <el-input v-model="ruleForm.duty" type="textarea" style="width:250px;" placeholder="请输入简要的岗位职责，如管理哪些信息及事务。"></el-input>
           </el-form-item>
-          <el-form-item label="岗位状态" style="" prop="zindex">
-            <el-select v-model="ruleForm.zindex" style="width:250px;" filterable @change="change2" placeholder="请选择">
-              <el-option label="启用" value="1"></el-option> 
-              <el-option label="禁用" value="2"></el-option>  
+          <el-form-item label="岗位状态" style="" prop="status">
+            <el-select v-model="ruleForm.status" style="width:250px;" filterable @change="change2" placeholder="请选择">
+              <el-option v-for='item in statusList' :key='item.value' :label="item.label" :value="item.value"></el-option> 
             </el-select>
           </el-form-item>
            <el-form-item label="岗位排序码" style="padding-right:5px;" prop="sort">
-            <el-input v-model="ruleForm.depName" style="width:250px;" placeholder="如0001，不输入默认排在最后"></el-input>
+            <el-input v-model="ruleForm.sort" style="width:250px;" placeholder="如0001，不输入默认排在最后"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -68,28 +67,13 @@
 </template>
 
 <script>
-
+import {getPage,addPost,addPost2,getPost,deletePost} from '@/api/organization/post'
 export default {
     name:'post',
     data(){
         return{
             data:[
-                {
-                    numb:'岗位1',
-                    schoolName:'岗位1',
-                    year:'',
-                    status:'启用',
-                    className:'',
-                    name:''
-                },
-                {
-                    numb:'岗位2',
-                    schoolName:'岗位2',
-                    year:'',
-                    status:'停用',
-                    className:'',
-                    name:''
-                }
+                
             ],
             title:'新增',
             yearList:[],
@@ -100,74 +84,127 @@ export default {
             dialogFormVisible:false,
             isdisabled:false,
             isshow:false,
+            statusList:[
+              {
+                value:0,label:'启用'
+              },{
+                value:1,label:'未启用'
+              }
+            ],
             form:{
-                year:'',
-                class:'',
+                status:'',
+                postName:'',
                 seachInfo:'',
                 page:1,
-                pageSize:10,    
+                size:10,    
             },
             ruleForm:{
-                depName:'',
-                company:'',
-                zindex:'',
-                aboveDep:'',
-                sort:''
+                name:'',
+                duty:'',
+                status:'',
+                sort:'',
+                id:''
             },
             rules:{
-                depName: [{ required: true, message: "请输入岗位名称", trigger: "blur" }],
-                company: [{ required: true, message: "请输入岗位职责", trigger: "blur" }],
-                zindex: [{ required: true, message: "请选择岗位状态", trigger: "blur" }],
+                name: [{ required: true, message: "请输入岗位名称", trigger: "blur" }],
+                duty: [{ required: true, message: "请输入岗位职责", trigger: "blur" }],
+                status: [{ required: true, message: "请选择岗位状态", trigger: "blur" }],
             }
         }
+    },
+    mounted(){
+      this.handleQuery()   
     },
     methods:{
         handleruleForm(){
              this.$refs["ruleForm"].validate((valid) => {
                 if (valid) {
-                    this.dialogFormVisible=false
+                  if(this.ruleForm.id){
+                    addPost2(this.ruleForm).then(res=>{
+                      if(res.data.code===200){
+                        this.handleQuery()
+                        this.dialogFormVisible=false
+                      }else{
+                        this.msgError(res.message)
+                      }
+                    })
+                  }else{
+                    addPost(this.ruleForm).then(res=>{
+                      if(res.data.code===200){
+                        this.handleQuery()
+                        this.dialogFormVisible=false
+                      }else{
+                        this.msgError(res.message)
+                      }
+                    })
+                  }
                 }
              })
         },
-        change1(){
-            this.$forceUpdate()
-        },
+   
         change2(){
             
             this.$forceUpdate()
         },
-        change3(){
-            this.$forceUpdate()
-        },
-        handleQueryForm(){
-
-        },
+   
         handleQuery(){
-            
+          this.loading=true
+            getPage(this.form).then(res=>{
+              
+              if(res.data.code===200){
+                this.loading=false
+                this.data=res.data.data.records
+                this.total=res.data.data.total
+              }else{
+                this.msgError(res.message)
+              }
+            })
         },
-        handleSelect(){
-          
-        },
-        handleQueryForm(){
-
-        },
-        addDep(row){
+        
+        addPost(row){
             this.dialogFormVisible=true
-            if(row.numb){
+            if(row.id){
                 this.title='修改'
+                this.ruleForm={name:'',duty:'',status:'',sort:'',id:''}
+                this.ruleForm.id=row.id
+                getPost(row.id).then(res=>{
+                  if(res.data.code===200){
+                   this.ruleForm.name=res.data.data.name
+                   this.ruleForm.duty=res.data.data.duty
+                   this.ruleForm.status=res.data.data.status
+                   this.ruleForm.sort=res.data.data.sort
+                   this.change2()
+                    this.$forceUpdate()
+                  }else{
+                    this.msgError(res.message)
+                  }
+                })
             }else{
                 this.title='新增'
+                this.ruleForm={name:'',duty:'',status:'',sort:'',id:''}
             }
         },
-        deleteDep(){
-
+        deletePost(row){
+        
+            this.$confirm("岗位删除后将不可恢复", "警告", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning",
+            })
+              .then(function () {
+                return deletePost(row.id);
+              })
+              .then((res) => {
+                if(res.data.code===200){
+                  this.handleQuery()
+                }else{
+                  this.msgError(res.message)
+                }
+              })
+        
         }
     },
-    created(){
-        this.handleQuery()
-
-        this.handleSelect()
-    }
+    
 }
 </script>
 <style lang="scss" scoped>
