@@ -1,5 +1,11 @@
 import request from '@/utils/request'
 
+export function getList(){
+  return request({
+    url: '/api/unit/list',
+    method: 'get'
+  })
+}
 // 单位列表
 export function getPage(form){
     return request({
@@ -8,6 +14,21 @@ export function getPage(form){
       data:form
     })
 }
+export function getPage2(form){
+  return request({
+    url: 'api/dept/page',
+    method: 'post',
+    data:form
+  })
+}
+export function getPage3(form){
+  return request({
+    url: '/api/post/page',
+    method: 'post',
+    data:form
+  })
+}
+
 //部门列表
 export function handleQuery(form){
   
