@@ -127,6 +127,14 @@ export const constantRoutes = [
         meta:{
           title:"用户列表",icon:"form"
         },
+      },
+      {
+        path:'personal',
+        name:"personal",
+        component: (resolve) => require(['@/views/userManagement/personal/index'], resolve),
+        meta:{
+          title:"个人中心",icon:"form"
+        },
       }
     ]
   }
