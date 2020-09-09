@@ -147,11 +147,11 @@
   height: 100%;
   position: fixed;
   font-size: 0px;
-  top: 0;
   bottom: 0;
   left: 0;
   z-index: 1001;
   overflow: hidden;
+  top:50px;
 }
 
 #app .sidebar-container .horizontal-collapse-transition {

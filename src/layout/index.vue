@@ -1,8 +1,9 @@
 <template>
   <div :class="classObj" class="app-wrapper">
-    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
+    <!-- <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" /> -->
+    <navbar style="position: fixed;top: 0;left: 0;right: 0;z-index: 2" />
     <sidebar class="sidebar-container" />
-    <div :class="{hasTagsView:needTagsView}" class="main-container">
+    <div :class="{hasTagsView:needTagsView}" class="main-container" style="margin-top: 50px; overflow: auto; height: 100%">
       <div :class="{'fixed-header':fixedHeader}">
         <!-- <navbar /> -->
         <tags-view v-if="needTagsView" />
@@ -31,7 +32,7 @@ export default {
     Sidebar,
     TagsView
   },
-  mixins: [ResizeMixin],
+  // mixins: [ResizeMixin],
   computed: {
     ...mapState({
       sidebar: state => state.app.sidebar,
@@ -66,6 +67,7 @@ export default {
     position: relative;
     height: 100%;
     width: 100%;
+    overflow-y: hidden;
 
     &.mobile.openSidebar {
       position: fixed;

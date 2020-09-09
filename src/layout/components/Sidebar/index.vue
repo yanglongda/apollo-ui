@@ -1,6 +1,6 @@
 <template>
-    <div :class="{'has-logo':showLogo}">
-        <logo v-if="showLogo" :collapse="isCollapse" />
+    <div style="margin-top:50px;" :class="{'has-logo':showLogo}">
+        
         <el-scrollbar wrap-class="scrollbar-wrapper">
             <el-menu
                 :default-active="activeMenu"
@@ -117,3 +117,8 @@ export default {
     }
 };
 </script>
+<style lang="scss">
+/deep/ #app .sidebar-container{
+    top:50px !important;
+}
+</style>

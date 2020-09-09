@@ -1,212 +1,6 @@
 <template>
   <div class="career">
-    <el-form :model="ruleForm2" :rules="rules" ref="ruleForm">
-        <div class="ruleForm-l">
-          <el-form-item label="所属单位" style prop="unitId" >
-            <el-select
-              v-model="ruleForm2.unitId"
-              filterable
-              style="width:250px;"
-              @change="change1"
-              placeholder="请选择"
-            >
-              <el-option v-for="item in unitList" :key='item.id' :label="item.name" :value="item.id"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="所属部门" style prop="deptId">
-            <el-select
-              v-model="ruleForm2.deptId"
-              filterable
-              style="width:250px;"
-              @change="change2"
-              placeholder="请选择"
-            >
-             <el-option v-for="item in deptList" :key='item.id' :label='item.deptName' :value='item.id'></el-option>
-             
-            </el-select>
-          </el-form-item>
-          <el-form-item label="人员编制" style prop="rybz">
-            <el-select
-              v-model="ruleForm2.rybz"
-              filterable
-              style="width:250px;"
-              @change="change3"
-              placeholder="请选择"
-            >
-            <el-option v-for="item in rybzList" :key='item.label' :label='item.label' :value='item.value'></el-option>
-              
-            </el-select>
-          </el-form-item>
-          <el-form-item label="职级" style prop="level">
-            <el-select
-              v-model="ruleForm2.level"
-              filterable
-              style="width:250px;"
-              @change="change4"
-              placeholder="请选择"
-            >
-              <el-option v-for="item in levelList" :key='item.label' :label='item.label' :value='item.value'></el-option>
-             
-            </el-select>
-          </el-form-item>
-          <el-form-item label="人员岗位" style prop="postId">
-            <el-select
-              v-model="ruleForm2.postId"
-              filterable
-              style="width:250px;"
-              @change="change5"
-              placeholder="请选择"
-            >
-             <el-option v-for="item in postList" :key='item.id' :label='item.name' :value='item.id'></el-option>
-           
-            </el-select>
-          </el-form-item>
-
-          <el-form-item
-            label="人员排序码"
-           
-            prop="sort"
-          >
-            <el-input
-              v-model="ruleForm2.sort"
-              style="width:250px;"
-              placeholder="如1，不输入默认排在最后"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="办公地址" style prop="oa">
-            <el-input
-              v-model="ruleForm2.oa"
-              style="width:250px;"
-              placeholder="请输入办公地址"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="邮箱" style prop="email">
-            <el-input
-              v-model="ruleForm2.email"
-              style="width:250px;"
-              placeholder="请输入邮箱"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="办公电话" style prop="phone">
-            <el-input
-              v-model="ruleForm2.phone"
-              style="width:250px;"
-              placeholder="请输入办公电话"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="传真" style prop="fax">
-            <el-input
-              v-model="ruleForm2.fax"
-              style="width:250px;"
-              placeholder="请输入传真"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="直接领导" style prop="zzld">
-            <el-input
-              v-model="ruleForm2.zzld"
-              style="width:250px;"
-              placeholder="请输入直接领导"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="参加工作时间" style prop="cjgzsj">
-            <el-input
-              v-model="ruleForm2.cjgzsj"
-              style="width:250px;"
-              placeholder="请输入参加工作时间"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="进入本单位时间" style prop="jrbdwsj">
-            <el-input
-              v-model="ruleForm2.jrbdwsj"
-              style="width:250px;"
-              placeholder="请输入进入本单位时间"
-            ></el-input>
-          </el-form-item>
-        </div>
-        <div class="ruleForm-r">
-          <el-form-item label="姓名" style prop="name">
-            <el-input
-              v-model="ruleForm2.name"
-              style="width:250px;"
-              placeholder="请输入用户真实姓名"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="手机号" style prop="mobile">
-            <el-input
-              v-model="ruleForm2.mobile"
-              style="width:250px;"
-              placeholder="请输入用户手机号"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="性别" style prop="sex">
-            <el-select
-              v-model="ruleForm2.sex"
-              filterable
-              style="width:250px;"
-            
-              placeholder="请选择"
-            >
-              <el-option v-for="item in sexList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="身份证号" style prop="idCard">
-            <el-input
-              v-model="ruleForm2.idCard"
-              style="width:250px;"
-              placeholder="请输入用户身份证号"
-            ></el-input>
-          </el-form-item>
-
-          <el-form-item label="出生日期" style prop="birthday">
-            <el-input
-              v-model="ruleForm2.birthday"
-              style="width:250px;"
-              placeholder="请输入用户出生日期"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="家庭邮编" style prop="jtyb">
-            <el-input
-              v-model="ruleForm2.jtyb"
-              style="width:250px;"
-              placeholder="请输入家庭邮编"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="家庭电话" style prop="homePhone">
-            <el-input
-              v-model="ruleForm2.homePhone"
-              style="width:250px;"
-              placeholder="请输入家庭电话"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="家庭住址" style prop="address">
-            <el-input
-              v-model="ruleForm2.address"
-              style="width:250px;"
-              placeholder="请输入用户家庭住址"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="政治面貌" style prop="zzmm">
-            <el-input
-              v-model="ruleForm2.zzmm"
-              style="width:250px;"
-              placeholder="请输入用户政治面貌"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="备注" style prop="remark">
-            <el-input
-              v-model="ruleForm2.remark"
-              type="textarea"
-              style="width:250px;"
-              placeholder="特殊需要备注的信息"
-            ></el-input>
-          </el-form-item>
-    <el-dialog
-      :title="title"
-      class="dialogFormVisible"
-      :visible.sync="dialogFormVisible"
-      append-to-body
-    >
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
+    <el-form :model="ruleForm" class="personal" :rules="rules" ref="ruleForm">
         <div class="ruleForm-l">
           <el-form-item label="所属单位" style prop="unitId" >
             <el-select
@@ -270,62 +64,61 @@
 
           <el-form-item
             label="人员排序码"
-           
             prop="sort"
           >
             <el-input
               v-model="ruleForm.sort"
               style="width:250px;"
-              placeholder="如1，不输入默认排在最后"
+              placeholder="暂无"
             ></el-input>
           </el-form-item>
           <el-form-item label="办公地址" style prop="oa">
             <el-input
               v-model="ruleForm.oa"
               style="width:250px;"
-              placeholder="请输入办公地址"
+              placeholder="暂无"
             ></el-input>
           </el-form-item>
           <el-form-item label="邮箱" style prop="email">
             <el-input
               v-model="ruleForm.email"
               style="width:250px;"
-              placeholder="请输入邮箱"
+              placeholder="暂无"
             ></el-input>
           </el-form-item>
           <el-form-item label="办公电话" style prop="phone">
             <el-input
               v-model="ruleForm.phone"
               style="width:250px;"
-              placeholder="请输入办公电话"
+              placeholder="暂无"
             ></el-input>
           </el-form-item>
           <el-form-item label="传真" style prop="fax">
             <el-input
               v-model="ruleForm.fax"
               style="width:250px;"
-              placeholder="请输入传真"
+              placeholder="暂无"
             ></el-input>
           </el-form-item>
           <el-form-item label="直接领导" style prop="zzld">
             <el-input
               v-model="ruleForm.zzld"
               style="width:250px;"
-              placeholder="请输入直接领导"
+              placeholder="暂无"
             ></el-input>
           </el-form-item>
           <el-form-item label="参加工作时间" style prop="cjgzsj">
             <el-input
               v-model="ruleForm.cjgzsj"
               style="width:250px;"
-              placeholder="请输入参加工作时间"
+              placeholder="暂无"
             ></el-input>
           </el-form-item>
           <el-form-item label="进入本单位时间" style prop="jrbdwsj">
             <el-input
               v-model="ruleForm.jrbdwsj"
               style="width:250px;"
-              placeholder="请输入进入本单位时间"
+              placeholder="暂无"
             ></el-input>
           </el-form-item>
         </div>
@@ -334,14 +127,14 @@
             <el-input
               v-model="ruleForm.name"
               style="width:250px;"
-              placeholder="请输入用户真实姓名"
+              placeholder="暂无"
             ></el-input>
           </el-form-item>
           <el-form-item label="手机号" style prop="mobile">
             <el-input
               v-model="ruleForm.mobile"
               style="width:250px;"
-              placeholder="请输入用户手机号"
+              placeholder="暂无"
             ></el-input>
           </el-form-item>
           <el-form-item label="性别" style prop="sex">
@@ -359,7 +152,7 @@
             <el-input
               v-model="ruleForm.idCard"
               style="width:250px;"
-              placeholder="请输入用户身份证号"
+              placeholder="暂无"
             ></el-input>
           </el-form-item>
 
@@ -367,35 +160,35 @@
             <el-input
               v-model="ruleForm.birthday"
               style="width:250px;"
-              placeholder="请输入用户出生日期"
+              placeholder="暂无"
             ></el-input>
           </el-form-item>
           <el-form-item label="家庭邮编" style prop="jtyb">
             <el-input
               v-model="ruleForm.jtyb"
               style="width:250px;"
-              placeholder="请输入家庭邮编"
+              placeholder="暂无"
             ></el-input>
           </el-form-item>
           <el-form-item label="家庭电话" style prop="homePhone">
             <el-input
               v-model="ruleForm.homePhone"
               style="width:250px;"
-              placeholder="请输入家庭电话"
+              placeholder="暂无"
             ></el-input>
           </el-form-item>
           <el-form-item label="家庭住址" style prop="address">
             <el-input
               v-model="ruleForm.address"
               style="width:250px;"
-              placeholder="请输入用户家庭住址"
+              placeholder="暂无"
             ></el-input>
           </el-form-item>
           <el-form-item label="政治面貌" style prop="zzmm">
             <el-input
               v-model="ruleForm.zzmm"
               style="width:250px;"
-              placeholder="请输入用户政治面貌"
+              placeholder="暂无"
             ></el-input>
           </el-form-item>
           <el-form-item label="备注" style prop="remark">
@@ -403,45 +196,15 @@
               v-model="ruleForm.remark"
               type="textarea"
               style="width:250px;"
-              placeholder="特殊需要备注的信息"
+              placeholder="暂无"
             ></el-input>
           </el-form-item>
-        </div>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleruleForm">确 定</el-button>
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-      </div>
-    </el-dialog>
-    <!-- excel导入 -->
-      <el-dialog :title="title2" class="atemplate" :visible.sync="atemplate" append-to-body>
-        <p>
-          <span>*</span>导入前先下载相应模板，按照模板要求填写对应信息。
-        </p>
-        <div slot="footer" class="atemplate-footer">
-          <el-button class="footer-left" >
-            <a :href="apiBase+'/api/person/download'">
-            模板下载
-            </a>
-          </el-button>
-          <el-upload
-          ref="upload"
-          :limit="1"
-          accept=".xls,.xlsx"
-          :headers="upload.headers"
-          :action="upload.url"
-          :disabled="upload.isUploading"
-          :name="upload.name"
-          :on-progress="handleFileUploadProgress"
-          :on-success="handleFileSuccess"
-          :auto-upload="true"
-        >
-            <div class="el-upload__text">
-              <el-button class="footer-right" @click="submitFileForm">选择excel导入</el-button>
-            </div>
-          </el-upload>
-        </div>
-      </el-dialog>
+          <span style="font-size:14px;color:#ff0000;margin:80px 0 0 30px;display:inline-block;">如若信息有误，可反馈给部门负责人/管理员修改</span>
+        </div> 
+        
+    </el-form>
+   
+    
   </div>
 </template>
 
@@ -519,8 +282,7 @@ export default {
       },
       ruleForm: {deptName:'',unitName:'',account: "",address: null,birthday: null,cjgzsj: null,contacts: null,createAt: "",delFlag: "",deptId: "",deptName: "",eid: "",email: null,fax: null,homeAddress: null,homePhone: null,id: "",idCard: null,jrbdwsj: null,jtyb: null,level: "",lxdh: null,mobile: "",name: "",oa: null,phone: null,post: null,postId: null,postLevel: null,remark: null,role: "",rybz: null,sex: "",shortMobile: null,sort: null,unitId: null,unitName: "",unitSort: null,updateAt: null,zzld: null,zzmm: null,
       },
-      ruleForm2: {deptName:'',unitName:'',account: "",address: null,birthday: null,cjgzsj: null,contacts: null,createAt: "",delFlag: "",deptId: "",deptName: "",eid: "",email: null,fax: null,homeAddress: null,homePhone: null,id: "",idCard: null,jrbdwsj: null,jtyb: null,level: "",lxdh: null,mobile: "",name: "",oa: null,phone: null,post: null,postId: null,postLevel: null,remark: null,role: "",rybz: null,sex: "",shortMobile: null,sort: null,unitId: null,unitName: "",unitSort: null,updateAt: null,zzld: null,zzmm: null,
-      },
+      
       upload: {
         // 是否显示弹出层（用户导入）
         open: false,
@@ -686,7 +448,6 @@ export default {
     change5(row){
       if(row){
         let index=this.postList.map(item=>item.id).indexOf(row)
-      
         this.ruleForm.post=this.postList[index].name
       }
        console.log(this.ruleForm.post)
@@ -738,46 +499,13 @@ export default {
               })
       }
     },
-    //导入excel
-    handleImport: function () {
-      this.atemplate = true;
-      this.title2 = "excel导入";
-    },
-    /** 下载模板操作 */
-    importTemplate() {
-      importTemplate().then((response) => {
-        if(response.code===0){
-        this.download(response.msg);
-        }else{
-            this.msgError(msgError)
-          }
-      });
-    },
-    // 文件上传中处理
-    handleFileUploadProgress(event, file, fileList) {
-      this.upload.isUploading = true;
-    },
-    // 文件上传成功处理
-    handleFileSuccess(response, file, fileList) {
-      this.upload.open = false;
-      this.upload.isUploading = false;
-      this.$refs.upload.clearFiles();
-      this.$alert(response.message, "导入结果", { dangerouslyUseHTMLString: true });
-      this.handleQuery();
-      this.atemplate=false
-    },
-    // 提交上传文件
-    submitFileForm() {
-      this.$refs.upload.submit();
-    },
-
   }
 };
 </script>
 <style lang="scss" scoped>
 .career {
   width: calc(100% - 40px);
-  margin: 0px 20px 75px 20px;
+  margin: 0px 50px 0px 60px;
   background: #fff;
 
   border-radius: 20px;
@@ -813,12 +541,30 @@ export default {
     color: #999;
   }
 }
+.personal {
+  /deep/ .el-form-item {
+    margin-bottom: 22px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  /deep/ .el-dialog__body {
+    padding: 30px 20px 0 20px;
+  }
+  #wuxu {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    font-size: 12px;
+    color: #999;
+  }
+}
 /deep/ .el-form {
   overflow: hidden;
   
 }
 .ruleForm-l {
   margin:0 20px;
+
   float:left;
 }
 .ruleForm-r {
@@ -852,5 +598,8 @@ export default {
       background: #fff;
     }
   }
+}
+/deep/ .el-textarea__inner{
+  height:100px;
 }
 </style>

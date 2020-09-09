@@ -1,30 +1,22 @@
 <template>
   <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
-
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
-
+    <div class="left-menu">
+      <img src="@/assets/logo/logo.png" class="sidebar-logo">
+      <h1 class="sidebar-title">组织架构管理系统</h1>
+    </div>
     <div class="right-menu">
-      <template v-if="device!=='mobile'">
-        <!-- <search id="header-search" class="right-menu-item" />
-        
-        <el-tooltip content="源码地址" effect="dark" placement="bottom">
-          <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
-        </el-tooltip>
-
-        <el-tooltip content="文档地址" effect="dark" placement="bottom">
-          <ruo-yi-doc id="ruoyi-doc" class="right-menu-item hover-effect" />
-        </el-tooltip> -->
-
-        <screenfull id="screenfull" class="right-menu-item hover-effect" />
-
-        <el-tooltip content="布局大小" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip>
-
-      </template>
-
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+      <div class="right-menu-item">
+        <!-- <div class="school-year" style="margin-top: 5px">2020-2021学年</div> -->
+        <div class="school-year">{{currentSemester}}</div>
+      </div>
+      <!-- <div class="right-menu-item">
+        <div class="name">{{name}}</div>
+        <div class="identity-contain">
+          <img class="image" src="@/assets/image/identity.png">
+          <div class="identity">{{roles[0] == 1 ? '学生' : (roles[0] == 2 ? '教师' : '管理员')}}</div>
+        </div>
+      </div> -->
+      <el-dropdown class="right-menu-item" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar" class="user-avatar">
           <i class="el-icon-caret-bottom" />
@@ -33,15 +25,13 @@
           <router-link to="/user/profile">
             <el-dropdown-item>个人中心</el-dropdown-item>
           </router-link>
-          <el-dropdown-item @click.native="setting = true">
-            <span>布局设置</span>
-          </el-dropdown-item>
           <el-dropdown-item divided @click.native="logout">
             <span>退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <div class="triangle-bottomright"></div>
   </div>
 </template>
 
@@ -69,6 +59,9 @@ export default {
     ...mapGetters([
       'sidebar',
       'avatar',
+      'name',
+      'roles',
+      'currentSemester',
       'device'
     ]),
     setting: {
@@ -93,7 +86,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$store.dispatch('LogOut').then(() => {
+        this.$store.dispatch('FedLogOut').then(() => {
           location.reload()
         })
       })
@@ -108,80 +101,91 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
-
-  .hamburger-container {
-    line-height: 46px;
-    height: 100%;
+  border-bottom: 1px solid rgba(112,112,112,1);
+  .left-menu {
     float: left;
-    cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
-
-    &:hover {
-      background: rgba(0, 0, 0, .025)
+    height: 100%;
+    line-height: 50px;
+    .sidebar-logo {
+      width: 36px;
+      height: 36px;
+      vertical-align: middle;
+      margin-right: 16px;
+      margin-left: 24px
+    }
+    .sidebar-title {
+      display: inline-block;
+      margin: 0;
+      color: #304156;
+      font-weight: 600;
+      line-height: 50px;
+      font-size: 20px;
+      font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+      vertical-align: middle;
     }
   }
 
-  .breadcrumb-container {
-    float: left;
+  .triangle-bottomright {
+    width: 0;
+    height: 0;
+    border-bottom: 50px solid #304156;
+    border-left: 25px solid transparent;
+    float: right;
   }
-
-  .errLog-container {
-    display: inline-block;
-    vertical-align: top;
-  }
-
   .right-menu {
     float: right;
     height: 100%;
-    line-height: 50px;
-
-    &:focus {
-      outline: none;
-    }
+    background: #304156;
 
     .right-menu-item {
       display: inline-block;
-      padding: 0 8px;
       height: 100%;
-      font-size: 18px;
-      color: #5a5e66;
+      color: #fff;
       vertical-align: text-bottom;
-
-      &.hover-effect {
-        cursor: pointer;
-        transition: background .3s;
-
-        &:hover {
-          background: rgba(0, 0, 0, .025)
-        }
+      .school-year {
+        font-size: 14px;
+        line-height: 20px;
+        width: 96px;
+        margin-left: 5px;
+        margin-right: 300px;
+        margin-top: 5px;
       }
     }
-
-    .avatar-container {
-      margin-right: 30px;
-
-      .avatar-wrapper {
-        margin-top: 5px;
-        position: relative;
-
-        .user-avatar {
-          cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
-        }
-
-        .el-icon-caret-bottom {
-          cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
-        }
-      }
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 36px;
+      margin-top: 6px;
+      margin-left: 10px
+    }
+    .identity-contain {
+      display: flex;
+      align-items: center;
+      margin-top: -2px;
+    }
+    .name {
+      color: #fff;
+      font-size: 18px;
+      font-weight: 400;
+      margin-top: 6px;
+    }
+    .image {
+      width: 19px;
+      height: 14px;
+      margin-right: 3px;
+    }
+    .identity {
+      color: #fff;
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 24px;
+    }
+    .el-icon-caret-bottom {
+      cursor: pointer;
+      font-size: 12px;
+      margin-right: 20px;
     }
   }
 }
+
 </style>

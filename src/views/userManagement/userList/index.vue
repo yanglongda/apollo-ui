@@ -44,6 +44,7 @@
       v-loading="loading"
       class="table-num"
       :data="data"
+      @row-click="row"
       style="margin-top:20px;"
     >
       <tamplate slot="empty">
@@ -305,6 +306,240 @@
         <el-button @click="dialogFormVisible = false">取 消</el-button>
       </div>
     </el-dialog>
+     <el-dialog
+      :title="title3"
+      class="dialogFormVisible"
+      :visible.sync="dialogFormVisible2"
+      append-to-body
+    >
+     <el-form :model="ruleForm" class="personal" :rules="rules" ref="ruleForm">
+        <div class="ruleForm-l">
+          <el-form-item label="所属单位" style prop="unitId" >
+            <el-select
+              v-model="ruleForm.unitId"
+              filterable
+              :disabled="isdisabled2"
+              style="width:250px;"
+              @change="change1"
+              placeholder="请选择"
+            >
+              <el-option v-for="item in unitList" :key='item.id' :label="item.name" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="所属部门" style prop="deptId">
+            <el-select
+              v-model="ruleForm.deptId"
+              filterable
+              :disabled="isdisabled2"
+              style="width:250px;"
+              @change="change2"
+              placeholder="请选择"
+            >
+             <el-option v-for="item in deptList" :key='item.id' :label='item.deptName' :value='item.id'></el-option>
+             
+            </el-select>
+          </el-form-item>
+          <el-form-item label="人员编制" style prop="rybz">
+            <el-select
+              v-model="ruleForm.rybz"
+              filterable
+              :disabled="isdisabled2"
+              style="width:250px;"
+              @change="change3"
+              placeholder="请选择"
+            >
+            <el-option v-for="item in rybzList" :key='item.label' :label='item.label' :value='item.value'></el-option>
+              
+            </el-select>
+          </el-form-item>
+          <el-form-item label="职级" style prop="level">
+            <el-select
+              v-model="ruleForm.level"
+              filterable
+              :disabled="isdisabled2"
+              style="width:250px;"
+              @change="change4"
+              placeholder="请选择"
+            >
+              <el-option v-for="item in levelList" :key='item.label' :label='item.label' :value='item.value'></el-option>
+             
+            </el-select>
+          </el-form-item>
+          <el-form-item label="人员岗位" style prop="postId">
+            <el-select
+              v-model="ruleForm.postId"
+              filterable
+              :disabled="isdisabled2"
+              style="width:250px;"
+              @change="change5"
+              placeholder="请选择"
+            >
+             <el-option v-for="item in postList" :key='item.id' :label='item.name' :value='item.id'></el-option>
+           
+            </el-select>
+          </el-form-item>
+
+          <el-form-item
+            label="人员排序码"
+            prop="sort"
+          >
+            <el-input
+              v-model="ruleForm.sort"
+              :disabled="isdisabled2"
+              style="width:250px;"
+              placeholder="暂无"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="办公地址" style prop="oa">
+            <el-input
+              v-model="ruleForm.oa"
+              style="width:250px;"
+              :disabled="isdisabled2"
+              placeholder="暂无"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱" style prop="email">
+            <el-input
+              v-model="ruleForm.email"
+              style="width:250px;"
+              :disabled="isdisabled2"
+              placeholder="暂无"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="办公电话" style prop="phone">
+            <el-input
+              v-model="ruleForm.phone"
+              style="width:250px;"
+              :disabled="isdisabled2"
+              placeholder="暂无"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="传真" style prop="fax">
+            <el-input
+              v-model="ruleForm.fax"
+              style="width:250px;"
+              :disabled="isdisabled2"
+              placeholder="暂无"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="直接领导" style prop="zzld">
+            <el-input
+              v-model="ruleForm.zzld"
+              style="width:250px;"
+              :disabled="isdisabled2"
+              placeholder="暂无"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="参加工作时间" style prop="cjgzsj">
+            <el-input
+              v-model="ruleForm.cjgzsj"
+              style="width:250px;"
+              :disabled="isdisabled2"
+              placeholder="暂无"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="进入本单位时间" style prop="jrbdwsj">
+            <el-input
+              v-model="ruleForm.jrbdwsj"
+              style="width:250px;"
+              :disabled="isdisabled2"
+              placeholder="暂无"
+            ></el-input>
+          </el-form-item>
+        </div>
+        <div class="ruleForm-r">
+          <el-form-item label="姓名" style prop="name">
+            <el-input
+              v-model="ruleForm.name"
+              style="width:250px;"
+              :disabled="isdisabled2"
+              placeholder="暂无"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="手机号" style prop="mobile">
+            <el-input
+              v-model="ruleForm.mobile"
+              style="width:250px;"
+              :disabled="isdisabled2"
+              placeholder="暂无"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="性别" style prop="sex">
+            <el-select
+              v-model="ruleForm.sex"
+              filterable
+              style="width:250px;"
+            :disabled="isdisabled2"
+              placeholder="请选择"
+            >
+              <el-option v-for="item in sexList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="身份证号" style prop="idCard">
+            <el-input
+              v-model="ruleForm.idCard"
+              style="width:250px;"
+              :disabled="isdisabled2"
+              placeholder="暂无"
+            ></el-input>
+          </el-form-item>
+
+          <el-form-item label="出生日期" style prop="birthday">
+            <el-input
+              v-model="ruleForm.birthday"
+              style="width:250px;"
+              :disabled="isdisabled2"
+              placeholder="暂无"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="家庭邮编" style prop="jtyb">
+            <el-input
+              v-model="ruleForm.jtyb"
+              style="width:250px;"
+              :disabled="isdisabled2"
+              placeholder="暂无"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="家庭电话" style prop="homePhone">
+            <el-input
+              v-model="ruleForm.homePhone"
+              style="width:250px;"
+              :disabled="isdisabled2"
+              placeholder="暂无"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="家庭住址" style prop="address">
+            <el-input
+              v-model="ruleForm.address"
+              style="width:250px;"
+              :disabled="isdisabled2"
+              placeholder="暂无"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="政治面貌" style prop="zzmm">
+            <el-input
+              v-model="ruleForm.zzmm"
+              style="width:250px;"
+              :disabled="isdisabled2"
+              placeholder="暂无"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="备注" style prop="remark">
+            <el-input
+              v-model="ruleForm.remark"
+              type="textarea"
+              style="width:250px;"
+              :disabled="isdisabled2"
+              placeholder="暂无"
+            ></el-input>
+          </el-form-item>
+          <el-button type="primary" style="margin:50px 0 0 260px;" @click="addDep">
+            修改
+        </el-button>
+        </div> 
+        
+    </el-form>
+    </el-dialog>
     <!-- excel导入 -->
       <el-dialog :title="title2" class="atemplate" :visible.sync="atemplate" append-to-body>
         <p>
@@ -351,6 +586,7 @@ export default {
       adata: [],
       atemplate:false,
       title2:'模板导入',
+      title3:'个人中心',
       total: 10,
       unitList:[],
       deptList:[],
@@ -399,6 +635,8 @@ export default {
       ] ,    
       loading: false,
       dialogFormVisible: false,
+      dialogFormVisible2: false,
+      isdisabled2:true,
       isdisabled: false,
       isshow: false,
       id:'',
@@ -408,6 +646,8 @@ export default {
         postId: "",
         page: 1,
         size: 10,
+      },
+      ruleForm: {deptName:'',unitName:'',account: "",address: null,birthday: null,cjgzsj: null,contacts: null,createAt: "",delFlag: "",deptId: "",deptName: "",eid: "",email: null,fax: null,homeAddress: null,homePhone: null,id: "",idCard: null,jrbdwsj: null,jtyb: null,level: "",lxdh: null,mobile: "",name: "",oa: null,phone: null,post: null,postId: null,postLevel: null,remark: null,role: "",rybz: null,sex: "",shortMobile: null,sort: null,unitId: null,unitName: "",unitSort: null,updateAt: null,zzld: null,zzmm: null,
       },
       ruleForm: {deptName:'',unitName:'',account: "",address: null,birthday: null,cjgzsj: null,contacts: null,createAt: "",delFlag: "",deptId: "",deptName: "",eid: "",email: null,fax: null,homeAddress: null,homePhone: null,id: "",idCard: null,jrbdwsj: null,jtyb: null,level: "",lxdh: null,mobile: "",name: "",oa: null,phone: null,post: null,postId: null,postLevel: null,remark: null,role: "",rybz: null,sex: "",shortMobile: null,sort: null,unitId: null,unitName: "",unitSort: null,updateAt: null,zzld: null,zzmm: null,
       },
@@ -423,7 +663,7 @@ export default {
         updateSupport: 0,
         // 设置上传的请求头部
         // 上传的地址
-        url: apiBase + "/api/person/import",
+        url: apiBase + "api/person/import",
       },
       rules: {
         unitId: [
@@ -466,6 +706,7 @@ export default {
               }else{
                 this.msgError(res.message)
               }
+              this.dialogFormVisible2=false
             })
           }else{
             addPerson(this.ruleForm).then(res=>{
@@ -585,10 +826,17 @@ export default {
 
     addDep(row) {
       this.dialogFormVisible = true;
-      if (row.id) {
+      
+      if (row.id||this.id) {
         this.ruleForm={deptName:'',unitName:'',account: "",address: null,birthday: null,cjgzsj: null,contacts: null,createAt: "",delFlag: "",deptId: "",deptName: "",eid: "",email: null,fax: null,homeAddress: null,homePhone: null,id: "",idCard: null,jrbdwsj: null,jtyb: null,level: "",lxdh: null,mobile: "",name: "",oa: null,phone: null,post: null,postId: null,postLevel: null,remark: null,role: "",rybz: null,sex: "",shortMobile: null,sort: null,unitId: null,unitName: "",unitSort: null,updateAt: null,zzld: null,zzmm: null,}
+        if(row.id){
+            this.id=row.id
+        }else{
+          row.id=this.id
+        }
         this.id=row.id
         this.title = "修改";
+        
         getPerson(row.id).then(res=>{
           if(res.data.code===200){
             console.log(res.data.data)
@@ -608,6 +856,7 @@ export default {
         this.id=''
         this.title = "新增";
       }
+      event.stopPropagation()
     },
     deleteDep(row) {
       if(row.id){
@@ -622,10 +871,12 @@ export default {
               .then((res) => {
                 if(res.data.code===200){
                   this.handleQuery()
+                  
                 }else{
                   this.msgError(res.message)
                 }
               })
+              event.stopPropagation()
       }
     },
     //导入excel
@@ -660,7 +911,11 @@ export default {
     submitFileForm() {
       this.$refs.upload.submit();
     },
-
+    row(row, column, cell, event){
+      this.dialogFormVisible2=true
+      this.addDep(row)
+      this.dialogFormVisible = false
+    }
   }
 };
 </script>
@@ -742,5 +997,18 @@ export default {
       background: #fff;
     }
   }
+}
+/deep/.el-table tr{
+  position: relative;
+  z-index:9;
+}
+/deep/ .el-table .cell{
+.el-button--text{
+  position: relative;
+  z-index: 99;
+}
+}
+/deep/ .el-textarea__inner{
+  height:100px;
 }
 </style>
