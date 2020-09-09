@@ -201,27 +201,33 @@ export default {
              })
             
         },
-        getParent(id){
-          getParent(id).then(res=>{
-            if(res.data.code==200){
-              this.deptList=res.data.data
-              this.change3()
-            }else{
-              this.msgError(res.message)
-            }
-          })
-        },
+        // getParent(id){
+        //   getParent(id).then(res=>{
+        //     if(res.data.code==200){
+        //       this.deptList=res.data.data
+        //       this.change3()
+        //     }else{
+        //       this.msgError(res.message)
+        //     }
+        //   })
+        // },
         change1(row){
             this.ruleForm.unitName=''
-            this.ruleForm.unitName=this.unitList[row-1].name
+            if(row){
+            let index=this.unitList.map(item=>item.id).indexOf(row)
+            this.ruleForm.unitName=this.unitList[index].name
+            }
             console.log(this.ruleForm.unitName)
             let id=this.ruleForm.unitId
-            this.getParent(id)
+            // this.getParent(id)
             this.$forceUpdate()
         },
         change2(row){
             this.ruleForm.level=''
-            this.ruleForm.level=this.levels[row-1].level
+            if(row){
+              let index=this.levels.map(item=>item.levelId).indexOf(row)
+              this.ruleForm.level=this.levels[index].level
+            }
             console.log(this.ruleForm.level)
             if(this.ruleForm.levelId=='1'){
                 this.ruleForm.parent=''
@@ -230,7 +236,8 @@ export default {
             }else{
               let deptName=this.ruleForm.deptName
               let levalId=this.ruleForm.levelId
-              getParent2(deptName,levalId).then(res=>{
+              console.log(levalId)
+              getParent2(null,levalId).then(res=>{
                 if(res.data.code===200){
                   this.deptList=res.data.data
                 }else{
@@ -242,8 +249,9 @@ export default {
             }
             this.$forceUpdate()
         },
-        change3(){
+        change3(row){
             
+          
             this.$forceUpdate()
         },
         handleQueryForm(){
@@ -310,9 +318,9 @@ export default {
                         this.isshow=true
                     }
                     console.log(this.ruleForm)
-                    // this.change1()
-                    // this.change2()
-                    // this.change3()
+                    this.change1(this.ruleForm.unitId)
+                    this.change2(this.ruleForm.levelId)
+                    
                      this.$forceUpdate()
                   }else{
                     this.ruleForm.unitId=res.data.data.unitId

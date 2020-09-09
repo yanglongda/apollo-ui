@@ -8,10 +8,9 @@
           filterable
           placeholder="请选择"
         >
-          <el-option label="全部" value></el-option>
-          <el-option label="一级部门" value="1"></el-option>
-          <el-option label="二级部门" value="2"></el-option>
-          <el-option label="三级部门" value="3"></el-option>
+          <el-option label="全部" value=''></el-option>
+         <el-option v-for="item in deptList" :key='item.id' :label='item.deptName' :value='item.id'></el-option>
+             
         </el-select>
       </el-form-item>
       <el-form-item label="人员岗位" style="width:290px">
@@ -21,17 +20,17 @@
           filterable
           placeholder="请选择"
         >
-          <el-option label="全部" value></el-option>
-          <el-option label="一级部门" value="1"></el-option>
-          <el-option label="二级部门" value="2"></el-option>
-          <el-option label="三级部门" value="3"></el-option>
+          <el-option label="全部" value=''></el-option>
+          <el-option v-for="item in postList" :key='item.id' :label='item.name' :value='item.id'></el-option>
+           
         </el-select>
       </el-form-item>
       <el-form-item label="搜索" style="width:290px;">
         <el-input
           v-model="form.keyword"
           style="width:240px;"
-          placeholder="按部门名称搜索"
+
+          placeholder="输入姓名、手机号"
         ></el-input>
       </el-form-item>
       <el-form-item>
@@ -40,7 +39,7 @@
     </el-form>
     <el-button type="primary" @click="addDep">新增</el-button>
     <el-button type="info" @click="handleImport">导入</el-button>
-    <el-button type="warning" @click="handleExport">导出</el-button>
+    <el-button type="warning" ><a :href="apiBase+'/api/person/export'">导出</a></el-button>
     <el-table
       v-loading="loading"
       class="table-num"
@@ -60,7 +59,7 @@
         </p>
       </tamplate>
       <el-table-column label="姓名" align="center" prop="name" />
-      <el-table-column label="手机号" align="center" prop="phone" />
+      <el-table-column label="手机号" align="center" prop="mobile" />
       <el-table-column label="所属部门" align="center" prop="deptName" />
       <el-table-column label="人员岗位" align="center" prop="post" />
       <el-table-column label="职务层次" align="center" prop="level" />
@@ -120,7 +119,7 @@
               @change="change2"
               placeholder="请选择"
             >
-             <el-option v-for="item in deptList" :key='item.deptName' :label='item.deptName' :value='item.deptName'></el-option>
+             <el-option v-for="item in deptList" :key='item.id' :label='item.deptName' :value='item.id'></el-option>
              
             </el-select>
           </el-form-item>
@@ -156,7 +155,7 @@
               @change="change5"
               placeholder="请选择"
             >
-             <el-option v-for="item in postList" :key='item.name' :label='item.name' :value='item.name'></el-option>
+             <el-option v-for="item in postList" :key='item.id' :label='item.name' :value='item.id'></el-option>
            
             </el-select>
           </el-form-item>
@@ -242,11 +241,10 @@
               v-model="ruleForm.sex"
               filterable
               style="width:250px;"
-              @change="change1"
+            
               placeholder="请选择"
             >
-              <el-option label="男" value="1"></el-option>
-              <el-option label="女" value="3"></el-option>
+              <el-option v-for="item in sexList" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="身份证号" style prop="idCard">
@@ -307,12 +305,41 @@
         <el-button @click="dialogFormVisible = false">取 消</el-button>
       </div>
     </el-dialog>
+    <!-- excel导入 -->
+      <el-dialog :title="title2" class="atemplate" :visible.sync="atemplate" append-to-body>
+        <p>
+          <span>*</span>导入前先下载相应模板，按照模板要求填写对应信息。
+        </p>
+        <div slot="footer" class="atemplate-footer">
+          <el-button class="footer-left" >
+            <a :href="apiBase+'/api/person/download'">
+            模板下载
+            </a>
+          </el-button>
+          <el-upload
+          ref="upload"
+          :limit="1"
+          accept=".xls,.xlsx"
+          :headers="upload.headers"
+          :action="upload.url"
+          :disabled="upload.isUploading"
+          :name="upload.name"
+          :on-progress="handleFileUploadProgress"
+          :on-success="handleFileSuccess"
+          :auto-upload="true"
+        >
+            <div class="el-upload__text">
+              <el-button class="footer-right" @click="submitFileForm">选择excel导入</el-button>
+            </div>
+          </el-upload>
+        </div>
+      </el-dialog>
   </div>
 </template>
 
 <script>
-import { getPage,getPage2,getPage3,getList} from "@/api/userManagement/userList";
-
+import { getPage,getPage2,getPage3,getList,getUnit,addPerson,addPerson2,getPerson,deletePerson} from "@/api/userManagement/userList";
+import {apiBase} from "../../../../build/apiBase.js"
 export default {
   name: "department",
   data() {
@@ -322,19 +349,27 @@ export default {
       yearList: [],
       classList: [],
       adata: [],
+      atemplate:false,
+      title2:'模板导入',
       total: 10,
       unitList:[],
       deptList:[],
       postList:[],
+      apiBase,
+      sexList:[
+        {label:'男',value:1},
+        {label:'女',value:0},
+        {label:'未知',value:2},
+      ],
       rybzList:[
-                {
-                  label:'公务员编制',value:'公务员编制'
-                },{
-                  label:'事业单位编制',value:'事业单位编制'
-                },{
-                  label:'其他',value:'其他'
-                }
-              ],
+        {
+          label:'公务员编制',value:'公务员编制'
+        },{
+          label:'事业单位编制',value:'事业单位编制'
+        },{
+          label:'其他',value:'其他'
+        }
+      ],
       levelList:[
         {
           label:'国家级正职',value:'国家级正职'
@@ -366,6 +401,7 @@ export default {
       dialogFormVisible: false,
       isdisabled: false,
       isshow: false,
+      id:'',
       form: {
         deptId: "",
         keyword: "",
@@ -373,7 +409,21 @@ export default {
         page: 1,
         size: 10,
       },
-      ruleForm: {account: "",address: null,birthday: null,cjgzsj: null,contacts: null,createAt: "",delFlag: "",deptId: "",deptName: "",eid: "",email: null,fax: null,homeAddress: null,homePhone: null,id: "",idCard: null,jrbdwsj: null,jtyb: null,level: "",lxdh: null,mobile: "",name: "",oa: null,phone: null,post: null,postId: null,postLevel: null,remark: null,role: "",rybz: null,sex: "",shortMobile: null,sort: null,unitId: null,unitName: "",unitSort: null,updateAt: null,zzld: null,zzmm: null,
+      ruleForm: {deptName:'',unitName:'',account: "",address: null,birthday: null,cjgzsj: null,contacts: null,createAt: "",delFlag: "",deptId: "",deptName: "",eid: "",email: null,fax: null,homeAddress: null,homePhone: null,id: "",idCard: null,jrbdwsj: null,jtyb: null,level: "",lxdh: null,mobile: "",name: "",oa: null,phone: null,post: null,postId: null,postLevel: null,remark: null,role: "",rybz: null,sex: "",shortMobile: null,sort: null,unitId: null,unitName: "",unitSort: null,updateAt: null,zzld: null,zzmm: null,
+      },
+      upload: {
+        // 是否显示弹出层（用户导入）
+        open: false,
+        // 弹出层标题（用户导入）
+        title: "",
+        // 是否禁用上传
+        isUploading: false,
+        name:"source_file",
+        // 是否更新已经存在的用户数据
+        updateSupport: 0,
+        // 设置上传的请求头部
+        // 上传的地址
+        url: apiBase + "/api/person/import",
       },
       rules: {
         unitId: [
@@ -397,30 +447,59 @@ export default {
       },
     };
   },
-  created() {
+  mounted() {
     this.handleQuery();
     this.handleQuery2();
     this.handleQuery3();
-    this.handleSelect();
+    this.handleSelect()
   },
   methods: {
     handleruleForm() {
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          this.dialogFormVisible = false;
+          if(this.ruleForm.id){
+            addPerson2(this.ruleForm).then(res=>{
+              if(res.data.code===200){
+                this.handleQuery()
+                this.dialogFormVisible = false;
+                console.log(res.data)
+              }else{
+                this.msgError(res.message)
+              }
+            })
+          }else{
+            addPerson(this.ruleForm).then(res=>{
+              if(res.data.code===200){
+                console.log(res.data)
+                this.dialogFormVisible = false;
+                this.handleQuery()
+              }else{
+                this.msgError(res.message)
+              }
+            })
+          }
+          
         }
       });
     },
-    change1() {
-      this.$forceUpdate();
+    unique(arr){
+    var result = [];
+    var hash = {};
+    for ( var i=0;i<arr.length;i++){
+        var key = (typeof arr[i]) + arr[i];
+        if(!hash[key]){
+            result.push(arr[i]);
+            hash[key] = true;
+        }
+    }
+    return result;
+}
+,
+
+    handleQueryForm() {
+      this.form.page=1
+      this.handleQuery()
     },
-    change2() {
-      this.$forceUpdate();
-    },
-    change3() {
-      this.$forceUpdate();
-    },
-    handleQueryForm() {},
     handleQuery() {
       this.loading = true;
       getPage(this.form).then((res) => {
@@ -437,21 +516,20 @@ export default {
    
       getPage2(this.form).then((res) => {
         if (res.data.code === 200) {
-          this.deptList = res.data.data.records;
-        
-      
+          let len=res.data.data.records
+          
+            this.deptList=len;
         } else {
           this.msgError(message);
         }
       });
     },
     handleQuery3() {
-   
       getPage3(this.form).then((res) => {
-        if (res.data.code === 200) {
-          this.postList = res.data.data.records;
-        
-      
+          if (res.data.code === 200) {
+          let len=res.data.data.records
+          
+            this.postList=len
         } else {
           this.msgError(message);
         }
@@ -466,10 +544,27 @@ export default {
         }
       })
     },
-    change1(){
+    change1(row){
+      let id=this.ruleForm.unitId
+      let index=this.unitList.map(item=>item.id).indexOf(row)
+      this.ruleForm.unitName=this.unitList[index].name
+      console.log(this.ruleForm.unitName)
+      getUnit(id).then(res=>{
+        if(res.data.code===200){
+        let len=res.data.data
+            this.deptList=len
+         //this.deptList=this.unique(this.deptList)
+        console.log(this.deptList)
+        }
+      })
       this.$forceUpdate()
     },
-    change2(){
+    change2(row){
+      if(row){
+        let index=this.deptList.map(item=>item.id).indexOf(row)
+      this.ruleForm.deptName=this.deptList[index].deptName
+      }
+      console.log(this.ruleForm.deptName)
       this.$forceUpdate()
     },
     change3(){
@@ -478,21 +573,94 @@ export default {
     change4(){
       this.$forceUpdate()
     },
-    change5(){
+    change5(row){
+      if(row){
+        let index=this.postList.map(item=>item.id).indexOf(row)
+      
+        this.ruleForm.post=this.postList[index].name
+      }
+       console.log(this.ruleForm.post)
       this.$forceUpdate()
     },
-    handleQueryForm() {},
+
     addDep(row) {
       this.dialogFormVisible = true;
       if (row.id) {
+        this.ruleForm={deptName:'',unitName:'',account: "",address: null,birthday: null,cjgzsj: null,contacts: null,createAt: "",delFlag: "",deptId: "",deptName: "",eid: "",email: null,fax: null,homeAddress: null,homePhone: null,id: "",idCard: null,jrbdwsj: null,jtyb: null,level: "",lxdh: null,mobile: "",name: "",oa: null,phone: null,post: null,postId: null,postLevel: null,remark: null,role: "",rybz: null,sex: "",shortMobile: null,sort: null,unitId: null,unitName: "",unitSort: null,updateAt: null,zzld: null,zzmm: null,}
+        this.id=row.id
         this.title = "修改";
+        getPerson(row.id).then(res=>{
+          if(res.data.code===200){
+            console.log(res.data.data)
+            this.ruleForm=res.data.data
+            this.change1(this.ruleForm.unitId)
+            this.change2()
+            this.change3()
+            this.change4()
+            this.change5()
+            this.$forceUpdate()
+          }else{
+            this.msgError(res.message)
+          }
+        })
       } else {
+        this.ruleForm={deptName:'',unitName:'',account: "",address: null,birthday: null,cjgzsj: null,contacts: null,createAt: "",delFlag: "",deptId: "",deptName: "",eid: "",email: null,fax: null,homeAddress: null,homePhone: null,id: "",idCard: null,jrbdwsj: null,jtyb: null,level: "",lxdh: null,mobile: "",name: "",oa: null,phone: null,post: null,postId: null,postLevel: null,remark: null,role: "",rybz: null,sex: "",shortMobile: null,sort: null,unitId: null,unitName: "",unitSort: null,updateAt: null,zzld: null,zzmm: null,}
+        this.id=''
         this.title = "新增";
       }
     },
-    deleteDep() {},
-    handleImport() {},
-    handleExport() {},
+    deleteDep(row) {
+      if(row.id){
+        this.$confirm("用户信息删除后将不可恢复", "警告", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning",
+            })
+              .then(function () {
+                return deletePerson(row.id);
+              })
+              .then((res) => {
+                if(res.data.code===200){
+                  this.handleQuery()
+                }else{
+                  this.msgError(res.message)
+                }
+              })
+      }
+    },
+    //导入excel
+    handleImport: function () {
+      this.atemplate = true;
+      this.title2 = "excel导入";
+    },
+    /** 下载模板操作 */
+    importTemplate() {
+      importTemplate().then((response) => {
+        if(response.code===0){
+        this.download(response.msg);
+        }else{
+            this.msgError(msgError)
+          }
+      });
+    },
+    // 文件上传中处理
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true;
+    },
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      this.upload.open = false;
+      this.upload.isUploading = false;
+      this.$refs.upload.clearFiles();
+      this.$alert(response.message, "导入结果", { dangerouslyUseHTMLString: true });
+      this.handleQuery();
+      this.atemplate=false
+    },
+    // 提交上传文件
+    submitFileForm() {
+      this.$refs.upload.submit();
+    },
+
   }
 };
 </script>
@@ -546,5 +714,33 @@ export default {
 .ruleForm-r {
    margin:0 20px;
    float:left;
+}
+.atemplate {
+  /deep/ .el-dialog{
+    width:600px;
+  }
+  /deep/ .el-dialog__body {
+    font-size: 14px;
+    line-height: 25px;
+    span {
+      color: #ff4949;
+    }
+  }
+  .atemplate-footer {
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-around;
+    .el-button {
+      width: 160px;
+      height: 36px;
+      background: #1890ff;
+      color: #fff;
+    }
+    .footer-left {
+      border: solid 1px #1890ff;
+      color: #1890ff;
+      background: #fff;
+    }
+  }
 }
 </style>

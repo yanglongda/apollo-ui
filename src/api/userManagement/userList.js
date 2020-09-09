@@ -38,6 +38,13 @@ export function handleQuery(form){
     data:form
   })
 }
+export function getUnit(unitId){
+  return request({
+    url:'/api/dept/'+unitId+'/unit',
+    method:'get',
+  })
+}
+
 //部门层级列表
 export function levels(){
   
@@ -47,30 +54,39 @@ export function levels(){
   })
 }
 //新增
-export function addPost(form){
+export function addPerson(form){
   return request({
-    url:'/api/post',
+    url:'/api/person',
     method:'post',
     data:form
   })
 }
-export function addPost2(form){
+export function addPerson2(form){
   return request({
-    url:'/api/post',
+    url:'/api/person',
     method:'put',
     data:form
   })
 }
+
 // 查询
-export function getPost(id){
+export function getPerson(id){
   return request({
-    url:"/api/post/"+id,
+    url:"/api/person/"+id,
     method:'get',
   })
 }
-export function deletePost(id){
+export function deletePerson(id){
     return request({
-      url:"/api/post/"+id,
+      url:"/api/person/"+id,
       method:'delete',
     })
   }
+  // export function exportPerson(id){
+  //   return request({
+  //     url:"/api/person/export",
+  //     method:'get',
+  //   })
+  // }
+  
+  
